@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 
 
+// From Stackover Flow - https://stackoverflow.com/questions/30631522/caliburn-micro-support-for-passwordbox
+
 namespace MRMDesktopUI.Helpers
 {
     public static class PasswordBoxHelper
