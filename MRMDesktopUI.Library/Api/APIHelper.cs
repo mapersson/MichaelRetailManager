@@ -14,7 +14,7 @@ namespace MRMDesktopUI.Library.Api
         private HttpClient apiClient;
         private ILoggedInUserModel _loggedInUser; 
 
-        public APIHelper( ILoggedInUserModel loggedInUser)
+        public APIHelper(ILoggedInUserModel loggedInUser)
         {
             InitializeClient();
             _loggedInUser = loggedInUser;

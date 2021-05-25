@@ -21,14 +21,14 @@ namespace MRMDesktopUI.ViewModels
             }
         }
 
-        private BindingList<string> _itemQuantity;
+        private int _itemQuantity;
 
-        public  BindingList<string> ItemQuantity
+        public  int ItemQuantity
         {
             get { return _itemQuantity; }
             set { 
                 _itemQuantity = value;
-                NotifyOfPropertyChange(() => Products);
+                NotifyOfPropertyChange(() => ItemQuantity);
             }
         }
 
