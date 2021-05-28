@@ -40,14 +40,28 @@ namespace MRMDesktopUI.ViewModels
             }
         }
 
-        private int _itemQuantity;
+        private ProductModel _selectedProduct;
 
-        public  int ItemQuantity
+        public ProductModel SelectedProduct
+            {
+            get { return _selectedProduct; }
+            set { 
+                _selectedProduct = value;
+                NotifyOfPropertyChange(() => SelectedProduct);
+                NotifyOfPropertyChange(() => CanAddToCart);
+            }
+        }
+
+
+        private int _itemQuantity = 0;
+
+        public int ItemQuantity
         {
             get { return _itemQuantity; }
             set { 
                 _itemQuantity = value;
                 NotifyOfPropertyChange(() => ItemQuantity);
+                NotifyOfPropertyChange(() => CanAddToCart);
             }
         }
 
@@ -56,6 +70,11 @@ namespace MRMDesktopUI.ViewModels
             get
             {
                 bool output = false;
+
+                if (ItemQuantity > 0 && SelectedProduct?.QuantityInStock >= ItemQuantity)
+                {
+                    output = true;
+                }
 
                 return output;
             }
@@ -69,10 +88,39 @@ namespace MRMDesktopUI.ViewModels
             }
         }
 
+        public void AddToCart()
+        {
+            CartItemModel existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
 
-        private BindingList<string> _cart;
+            if (existingItem != null)
+            {
+                existingItem.QuantityInCart += ItemQuantity;
+                Cart.Remove(existingItem);
+                Cart.Add(existingItem);
+            }
+            else
+            {
+                CartItemModel item = new CartItemModel
+                {
+                    Product = SelectedProduct,
+                    QuantityInCart = ItemQuantity
+                };
+                Cart.Add(item);
+            }
 
-        public BindingList<string> Cart
+            SelectedProduct.QuantityInStock -= ItemQuantity;
+            ItemQuantity = 1;
+            NotifyOfPropertyChange(() => SubTotal);
+        }
+
+        public void RemoveFromCart()
+        {
+            NotifyOfPropertyChange(() => SubTotal);
+        }
+
+        private BindingList<CartItemModel> _cart = new BindingList<CartItemModel>();
+
+        public BindingList<CartItemModel> Cart
         {
             get { return _cart; }
             set { 
@@ -84,9 +132,15 @@ namespace MRMDesktopUI.ViewModels
 
         public string SubTotal
         {
-            get { 
-                //TODO: Replace with calculation.
-                return "$0.00"; 
+            get {
+                decimal subTotal = 0;
+
+                foreach(var item in Cart)
+                {
+                    subTotal += item.Product.RetailPrice * item.QuantityInCart;
+                }
+
+                return subTotal.ToString("C"); 
             }
             
         }
