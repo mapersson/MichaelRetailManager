@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MRMDesktopUI.Library.Helpers
+namespace MRMDataManager.Library
 {
-    public class ConfigHelper : IConfigHelper
+    public class ConfigHelper
     {
-        //TODO: Move this from config to the API.
-        public decimal GetTaxRate()
+        
+        public static decimal GetTaxRate()
         {
             decimal output = 0;
 

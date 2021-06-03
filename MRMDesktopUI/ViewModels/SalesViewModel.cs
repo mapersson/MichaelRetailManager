@@ -15,11 +15,13 @@ namespace MRMDesktopUI.ViewModels
     {
         private BindingList<ProductModel> _products;
         private IProductEndpoint _productEndpoint;
+        private ISaleEndpoint _saleEndpoint;
         private IConfigHelper _configHelper;
 
-        public SalesViewModel(IProductEndpoint productEndpoint, IConfigHelper configHelper)
+        public SalesViewModel(IProductEndpoint productEndpoint, IConfigHelper configHelper, ISaleEndpoint saleEndpoint)
         {
             _productEndpoint = productEndpoint;
+            _saleEndpoint = saleEndpoint;
             _configHelper = configHelper;
         }
 
@@ -116,6 +118,7 @@ namespace MRMDesktopUI.ViewModels
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
         }
 
         public void RemoveFromCart()
@@ -189,10 +192,34 @@ namespace MRMDesktopUI.ViewModels
 
         }
 
-
-        public void CheckOut()
+        public bool CanCheckOut
         {
+            get
+            {
+                bool output = false;
 
+                if (Cart.Count > 0)
+                {
+                    output = true;
+                }
+                return output;
+            }
+        }
+
+        public async Task CheckOut()
+        {
+            SaleModel sale = new SaleModel();
+            
+            foreach (var item in Cart)
+            {
+                sale.SaleDetails.Add(new SaleDetailModel
+                {
+                    ProductId = item.Product.Id,
+                    Quantity = item.QuantityInCart
+                });
+            }
+
+            await _saleEndpoint.PostSale(sale);
         }
 
 
