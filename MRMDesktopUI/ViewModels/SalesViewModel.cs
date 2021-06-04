@@ -42,7 +42,7 @@ namespace MRMDesktopUI.ViewModels
             Products = new BindingList<ProductDisplayModel>(products);
         }
 
-        public BindingList<ProductDisplayModel>  Products
+        public BindingList<ProductDisplayModel> Products
         {
             get { return _products; }
             set { 
@@ -61,6 +61,19 @@ namespace MRMDesktopUI.ViewModels
                 NotifyOfPropertyChange(() => SelectedProduct);
                 NotifyOfPropertyChange(() => CanAddToCart);
             }
+        }
+
+        private async Task ResetSalesViewModel()
+        {
+            Cart = new BindingList<CartItemDisplayModel>();
+            //TODO: Add clearing if not done itself.
+            await LoadProducts();
+
+            NotifyOfPropertyChange(() => SubTotal);
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
+            
         }
 
         private CartItemDisplayModel _selectedCartItem;
@@ -142,6 +155,7 @@ namespace MRMDesktopUI.ViewModels
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
             NotifyOfPropertyChange(() => CanCheckOut);
+            NotifyOfPropertyChange(() => CanAddToCart);
         }
 
         public void RemoveFromCart()
@@ -160,6 +174,8 @@ namespace MRMDesktopUI.ViewModels
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
+            NotifyOfPropertyChange(() => CanAddToCart);
         }
 
         private BindingList<CartItemDisplayModel> _cart = new BindingList<CartItemDisplayModel>();
@@ -254,6 +270,7 @@ namespace MRMDesktopUI.ViewModels
             }
 
             await _saleEndpoint.PostSale(sale);
+            await ResetSalesViewModel();
         }
 
 
