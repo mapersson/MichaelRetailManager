@@ -63,6 +63,19 @@ namespace MRMDesktopUI.ViewModels
             }
         }
 
+        private CartItemDisplayModel _selectedCartItem;
+
+        public CartItemDisplayModel SelectedCartItem
+        {
+            get { return _selectedCartItem; }
+            set
+            {
+                _selectedCartItem = value;
+                NotifyOfPropertyChange(() => SelectedProduct);
+                NotifyOfPropertyChange(() => CanRemoveFromCart);
+            }
+        }
+
 
         private int _itemQuantity = 0;
 
@@ -95,7 +108,13 @@ namespace MRMDesktopUI.ViewModels
         {
             get
             {
-                return true;
+                bool output = false;
+
+                if (SelectedCartItem != null && SelectedCartItem?.QuantityInCart > 0)
+                {
+                    output = true;
+                }
+                return output;
             }
         }
 
@@ -127,18 +146,16 @@ namespace MRMDesktopUI.ViewModels
 
         public void RemoveFromCart()
         {
-            CartItemDisplayModel existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
-
-            if (existingItem != null)
+           
+            SelectedCartItem.Product.QuantityInStock += 1;
+            if (SelectedCartItem.QuantityInCart > 1)
             {
-                existingItem.QuantityInCart -= ItemQuantity;
-                SelectedProduct.QuantityInStock += ItemQuantity;
-
-                if (existingItem.QuantityInCart == 0)
-                {
-                    Cart.Remove(Cart.FirstOrDefault(x => x == existingItem));
-                }
+                SelectedCartItem.QuantityInCart -= 1;
+            } else
+            {
+                Cart.Remove(SelectedCartItem);
             }
+
 
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
