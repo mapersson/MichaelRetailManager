@@ -1,4 +1,6 @@
-﻿using MRMDataManager.Library.Models;
+﻿using Microsoft.AspNet.Identity;
+using MRMDataManager.Library.DataAccess;
+using MRMDataManager.Library.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +16,11 @@ namespace MRMDataManager.Controllers
         // GET api/values
         public void Post(SaleModel sale)
         {
-            Console.WriteLine();
+            var data = new SaleData();
+            var cashierId = RequestContext.Principal.Identity.GetUserId();
+
+            data.SaveSale(sale, cashierId);
+            
         }
        
     }
