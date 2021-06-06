@@ -13,7 +13,7 @@ namespace MRMDataManager.Controllers
     [Authorize]
     public class SaleController : ApiController
     {
-       
+        [Authorize(Roles = "Cashier")]
         public void Post(SaleModel sale)
         {
             var data = new SaleData();
@@ -23,9 +23,16 @@ namespace MRMDataManager.Controllers
             
         }
 
+        [Authorize(Roles = "Admin,Manager")]
         [Route("GetSalesReport")]
         public List<SaleReportModel> GetSalesReport()
         {
+            
+            if (RequestContext.Principal.IsInRole("Admin"))
+            {
+                //Add administrator activties
+            }
+            
             SaleData data = new SaleData();
 
             return data.GetSaleReport();

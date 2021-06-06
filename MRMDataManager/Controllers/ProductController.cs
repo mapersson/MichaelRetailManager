@@ -9,10 +9,10 @@ using System.Web.Http;
 
 namespace MRMDataManager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Cashier")]
     public class ProductController : ApiController
     {
-        // GET api/values
+        
         public List<ProductModel> Get()
         {
 
