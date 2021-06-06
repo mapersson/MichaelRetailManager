@@ -10,15 +10,7 @@ namespace MRMDataManager.Library.DataAccess
 {
     public class SaleData
     {
-        //public List<SaleModel> GetProducts()
-        //{
-        //    SqlDataAccess sql = new SqlDataAccess();
-
-        //    var output = sql.LoadData<SaleModel, dynamic>("dbo.spProduct_GetAll", new { }, "MRMData");
-
-        //    return output;
-        //}
-
+       
         public void SaveSale(SaleModel saleInfo, string cashierId)
         {
             //TODO: Make this SOLID/DRY/Better
@@ -94,8 +86,14 @@ namespace MRMDataManager.Library.DataAccess
                 }
             }
        
+        }
 
+        public List<SaleReportModel> GetSaleReport()
+        {
+            SqlDataAccess sql = new SqlDataAccess();
 
+            var output = sql.LoadData<SaleReportModel, dynamic>("dbo.spSale_SaleReport", new { }, "MRMData");
+            return output;
         }
     }
 }

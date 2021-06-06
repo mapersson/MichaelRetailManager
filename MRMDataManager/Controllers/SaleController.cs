@@ -13,7 +13,7 @@ namespace MRMDataManager.Controllers
     [Authorize]
     public class SaleController : ApiController
     {
-        // GET api/values
+       
         public void Post(SaleModel sale)
         {
             var data = new SaleData();
@@ -21,6 +21,14 @@ namespace MRMDataManager.Controllers
 
             data.SaveSale(sale, cashierId);
             
+        }
+
+        [Route("GetSalesReport")]
+        public List<SaleReportModel> GetSalesReport()
+        {
+            SaleData data = new SaleData();
+
+            return data.GetSaleReport();
         }
        
     }
