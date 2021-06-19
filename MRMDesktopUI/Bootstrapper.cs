@@ -49,7 +49,8 @@ namespace MRMDesktopUI
 
             _container.Instance(_container)
                 .PerRequest<ISaleEndpoint,SaleEndpoint>()
-                .PerRequest<IProductEndpoint,ProductEndpoint>();
+                .PerRequest<IProductEndpoint,ProductEndpoint>()
+                .PerRequest<IUserEndpoint, UserEndpoint>();
 
 
             _container

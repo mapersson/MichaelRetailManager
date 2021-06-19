@@ -16,14 +16,13 @@ namespace MRMDesktopUI.ViewModels
         private SalesViewModel _salesVM;
         private ILoggedInUserModel _user;
         private IAPIHelper _apiHelper;
-        
+
         public ShellViewModel( IEventAggregator events, SalesViewModel salesVM, ILoggedInUserModel user, IAPIHelper apiHelper)
         {
 
             _salesVM = salesVM;
             _user = user;
             _apiHelper = apiHelper;
-
             _events = events;
             _events.Subscribe(this);
 
@@ -39,6 +38,11 @@ namespace MRMDesktopUI.ViewModels
         public void ExitApplication()
         {
             TryClose();
+        }
+
+        public void UserManagement()
+        {
+            ActivateItem(IoC.Get<UserDisplayViewModel>());           
         }
 
         public void LogOut()
