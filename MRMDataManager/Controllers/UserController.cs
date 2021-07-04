@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Extensions.Configuration;
 using MRMDataManager.Library.DataAccess;
 using MRMDataManager.Library.Models;
 using MRMDataManager.Models;
@@ -15,12 +16,18 @@ namespace MRMDataManager.Controllers
     [RoutePrefix("api/User")]
     public class UserController : ApiController
     {
+        private readonly IConfiguration _config;
+
+        public UserController(IConfiguration config)
+        {
+            _config = config;
+        }
 
         [HttpGet]
         public UserModel GetById()
         {
             string userId = RequestContext.Principal.Identity.GetUserId();
-            UserData data = new UserData();
+            UserData data = new UserData(_config);
 
             return data.GetUserById(userId);
            

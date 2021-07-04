@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
+using Microsoft.Extensions.Configuration;
 using MRMDataManager.Library.DataAccess;
 using MRMDataManager.Library.Models;
 using System;
@@ -13,10 +14,16 @@ namespace MRMDataManager.Controllers
     [Authorize]
     public class SaleController : ApiController
     {
+        private readonly IConfiguration _config;
+
+        public SaleController(IConfiguration config)
+        {
+            _config = config;
+        }
         [Authorize(Roles = "Cashier")]
         public void Post(SaleModel sale)
         {
-            var data = new SaleData();
+            var data = new SaleData(_config);
             var cashierId = RequestContext.Principal.Identity.GetUserId();
 
             data.SaveSale(sale, cashierId);
@@ -33,7 +40,7 @@ namespace MRMDataManager.Controllers
                 //Add administrator activties
             }
             
-            SaleData data = new SaleData();
+            SaleData data = new SaleData(_config);
 
             return data.GetSaleReport();
         }
