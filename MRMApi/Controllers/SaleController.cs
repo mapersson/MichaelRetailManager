@@ -17,20 +17,19 @@ namespace MRMApi.Controllers
     [Authorize]
     public class SaleController : ControllerBase
     {
-        private readonly IConfiguration _config;
+        private readonly ISaleData _saleData;
 
-        public SaleController(IConfiguration config)
+        public SaleController(ISaleData saleData)
         {
-            _config = config;
+            _saleData = saleData;
         }
         [Authorize(Roles = "Cashier")]
         [HttpPost]
         public void Post(SaleModel sale)
         {
-            var data = new SaleData(_config);
-            var cashierId = User.FindFirst(ClaimTypes.NameIdentifier).ToString(); //RequestContext.Principal.Identity.GetUserId();
+            var cashierId = User.FindFirstValue(ClaimTypes.NameIdentifier); //RequestContext.Principal.Identity.GetUserId();
 
-            data.SaveSale(sale, cashierId);
+            _saleData.SaveSale(sale, cashierId);
 
         }
 
@@ -45,9 +44,7 @@ namespace MRMApi.Controllers
                 //Add administrator activties
             }
 
-            SaleData data = new SaleData(_config);
-
-            return data.GetSaleReport();
+            return _saleData.GetSaleReport();
         }
     }
 }

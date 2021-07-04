@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MRMDataManager.Library.Internal.DataAccess
 {
-    internal class SqlDataAccess : IDisposable
+    public class SqlDataAccess : IDisposable, ISqlDataAccess
     {
         public SqlDataAccess(IConfiguration config)
         {
@@ -22,7 +22,7 @@ namespace MRMDataManager.Library.Internal.DataAccess
             return _config.GetConnectionString(name);
         }
 
-        public List<T> LoadData<T,U>(string storedProcedure, U parameters, string connectionStringName)
+        public List<T> LoadData<T, U>(string storedProcedure, U parameters, string connectionStringName)
         {
             string connectionString = GetConnectionString(connectionStringName);
 
@@ -40,8 +40,8 @@ namespace MRMDataManager.Library.Internal.DataAccess
 
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
-               connection.Execute(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
-               return;
+                connection.Execute(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
+                return;
             }
         }
 
@@ -60,13 +60,13 @@ namespace MRMDataManager.Library.Internal.DataAccess
 
         public void SaveDataInTransaction<T>(string storedProcedure, T parameters)
         {
-            _connection.Execute(storedProcedure, parameters, commandType: CommandType.StoredProcedure, transaction: _transaction);       
+            _connection.Execute(storedProcedure, parameters, commandType: CommandType.StoredProcedure, transaction: _transaction);
         }
 
         public List<T> LoadDataInTransaction<T, U>(string storedProcedure, U parameters)
         {
             List<T> rows = _connection.Query<T>(storedProcedure, parameters, commandType: CommandType.StoredProcedure, transaction: _transaction).ToList();
-            return rows;            
+            return rows;
         }
 
         private bool isClosed = false;
@@ -100,15 +100,11 @@ namespace MRMDataManager.Library.Internal.DataAccess
                 catch
                 {
                     //TODO: Log this issue. 
-                } 
+                }
             }
 
             _transaction = null;
             _connection = null;
         }
-
-
-        //Load using the transaction
-        //Save using the transaction
     }
 }
